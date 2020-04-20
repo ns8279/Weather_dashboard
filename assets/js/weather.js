@@ -82,9 +82,7 @@ var cardClick = function(event) {
         });
     });
 
-
 }
-
 
 //display the current weather
 var currentWeatherCondidtion = function(response) {
@@ -92,7 +90,7 @@ var currentWeatherCondidtion = function(response) {
     var currentDay = moment.unix(response.dt).format("MM/DD/YYYY");
 
     var cityName = document.createElement("h3");
-    cityName.textContent = response.name + " " + currentDay 
+    cityName.textContent = response.name + " " + "(" + currentDay + ")";
 
     //create the temperature element
     var temperatureEl = document.createElement("div");
@@ -399,13 +397,47 @@ var fiveForecast = function(forecast) {
             }
     }
 }
+
+//function to render the search
+var renderSearchCity = function(searchHistory) {
+    console.log(serachHistory);
+    searchHistoryEl.textContent = "";
+    $.each(searchHistory, function (i) {
+        var cityName = searchHistory[i];
+
+        //dynamically creating the card
+        var cityCard = $('<div>' + cityName + "</div>").attr('class', 'card text-center align-middle').attr("id", "cityName");
+        searchHistoryEl.prepend(cityCard);
+    });
+}
+
+//function for search history
+var searchHistory = function() {
+    var searchHistory = JSON.parse(localStorage.getItem("city"));
+    console.log(searchHistory);
+    console.log(typeof searchHistory);
+    if (typeof searchHistory === null) {
+        alert("No cities saved in history");
+    }
+    else if (typeof searchHistory === "undefined") {
+        alert("No cities saved in history");
+    }
+    else if (typeof searchHistory === 'string') {
+        searchHistory = JSON.parse(searchHistory);
+        renderSearchCity(searchHistory);
+    }
+    else {
+        renderSearchCity(searchHistory);
+    }
+
+}
     
 //function to add History to the searches
 var addHistory = function(response) {
     var cityStorage = localStorage.getItem("city");
     var citySearched = response.name;
-    // console.log(cityStorage);
-    // console.log(citySearched);
+    console.log(cityStorage);
+    console.log(citySearched);
 
     if (typeof (cityStorage) === null) {
         cityStorage = [];
@@ -443,41 +475,6 @@ var addHistory = function(response) {
     }
 }
 
-//function for search history
-var searchHistory = function() {
-    var searchHistory = JSON.parse(localStorage.getItem("city"));
-    // console.log(searchHistory);
-    // console.log(typeof searchHistory);
-    if (typeof searchHistory === null) {
-        alert("No cities saved in history");
-    }
-    else if (typeof searchHistory === "undefined") {
-        alert("No cities saved in history");
-    }
-    else if (typeof searchHistory === 'string') {
-        searchHistory = JSON.parse(searchHistory);
-        renderSearchCity(searchHistory);
-    }
-    else {
-        renderSearchCity(searchHistory);
-    }
-
-}
-
-//function to render the search
-var renderSearchCity = function(searchHistory) {
-    console.log(serachHistory);
-    searchHistoryEl.textContent = "";
-    $.each(searchHistory, function (i) {
-        var cityName = searchHistory[i];
-
-        //dynamically creating the card
-        var cityCard = $('<div>' + cityName + "</div>").attr('class', 'card text-center align-middle').attr("id", "cityName");
-        searchHistoryEl.prepend(cityCard);
-    });
-}
-
-
 //rendering default weather
 
 var defaultWeather = function() {
@@ -508,8 +505,6 @@ var defaultWeather = function() {
     });
 
 }
-
-
 
 
 searchBtnEl.addEventListener("click", getWeatherInfo);
