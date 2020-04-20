@@ -25,6 +25,7 @@ var getWeatherInfo = function () {
             currentWeatherCondidtion(response);
             uvIndex(response);
             addHistory(response);
+            
             });
         }else {
             alert("Error:" + response.statusText);
@@ -34,13 +35,14 @@ var getWeatherInfo = function () {
     .catch(function(error){
         //Notice this '.catch()' getting chained onto the end of the .then() method
         alert("unable to connect to Weather App! Please try again later");
-    })
+    });
 
     //make a request to the forecast url
     fetch(forecastUrl).then(function(response){
         if (response.ok) {
             response.json().then(function(forecast){
             fiveForecast(forecast);
+            
             });
         }else {
             alert("Error:" + response.statusText);
@@ -49,7 +51,7 @@ var getWeatherInfo = function () {
     .catch(function(error){
         //Notice this '.catch()' getting chained onto the end of the .then() method
         alert("unable to connect to Weather App! Please try again later");
-    })
+    });
 }
 
 
@@ -507,28 +509,7 @@ var defaultWeather = function() {
 
 }
 
-var calculateLocalDate = function() {
-    //get the current date
-    var date = new Date(); 
-    //calculate the UTC time of the current date
-    var now_utc =  Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-    // console.log("now_utc timestamp is " + now_utc);
-    
-    //calculate the time with offset based on utc time and add to it the offset
-    var timeWithTimeZoneOffset = now_utc + (timezone * 1000)
-    // console.log("timeWithTimeZoneOffset is " + timeWithTimeZoneOffset);
 
-    //calculate the the new date
-    var newDate = timeWithTimeZoneOffset  + (timezone * 1000);
-    var newDateUnformatted = new Date(newDate);
-    // console.log("newDateUnformatted is " + newDateUnformatted);
-    // console.log("newDate is " + newDate);
-
-    //format the new date
-    formattedLocalCityDate = moment(newDateUnformatted).format('(MM/DD/YYYY)')
-    // console.log("formattedLocalCityDate is " + formattedLocalCityDate);
-
-}
 
 
 searchBtnEl.addEventListener("click", getWeatherInfo);
